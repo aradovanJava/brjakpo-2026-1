@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Concert list</title>
+</head>
+<body>
+Concert list
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Venue</th>
+        <th>Start Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${concerts}">
+        <td th:text="${c.name}">Name</td>
+        <td th:text="${#temporals.format(c.startDateTime, 'dd.MM.yyyy. HH:mm')}">date</td>
+        <td th:text="${c.venue}">Venue</td>
+    </tr>
+    <!-- The designed empty state, not an accidentally blank table. -->
+    <tr th:if="${#lists.isEmpty(concerts)}">
+        <td colspan="4" class="empty" th:text="#{concert.empty}">No concerts yet.</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
