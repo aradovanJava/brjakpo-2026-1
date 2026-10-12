@@ -2,29 +2,177 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Concert list</title>
+    <!-- style.css lives in src/main/resources/static/ -->
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
-Concert list
-<table>
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Venue</th>
-        <th>Start Date</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="c : ${concerts}">
-        <td th:text="${c.name}">Name</td>
-        <td th:text="${#temporals.format(c.startDateTime, 'dd.MM.yyyy. HH:mm')}">date</td>
-        <td th:text="${c.venue}">Venue</td>
-    </tr>
-    <!-- The designed empty state, not an accidentally blank table. -->
-    <tr th:if="${#lists.isEmpty(concerts)}">
-        <td colspan="4" class="empty" th:text="#{concert.empty}">No concerts yet.</td>
-    </tr>
-    </tbody>
-</table>
+<div class="app">
+
+    <!-- ===================== Sidebar ===================== -->
+    <aside class="sidebar">
+        <a class="logo" th:href="@{/concerts}">
+            <svg viewBox="0 0 26 30" fill="none" aria-hidden="true">
+                <rect x="1" y="11" width="5" height="19" rx="2.5" fill="#e8604c"/>
+                <rect x="10.5" y="1" width="5" height="29" rx="2.5" fill="#e8604c"/>
+                <rect x="20" y="8" width="5" height="22" rx="2.5" fill="#e8604c"/>
+            </svg>
+            <span>chore</span>
+        </a>
+
+        <nav class="nav">
+            <a class="nav-link active" th:href="@{/concerts}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                </svg>
+                Concerts
+            </a>
+            <a class="nav-link" th:href="@{/members}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Members
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="lang-select">
+                <svg class="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                <select aria-label="Language" onchange="window.location.search='lang='+this.value">
+                    <option value="en" selected>English</option>
+                    <option value="hr">Hrvatski</option>
+                </select>
+                <svg class="icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m6 9 6 6 6-6"/>
+                </svg>
+            </div>
+
+            <!-- Spring Security expects logout via POST (with CSRF token, added automatically by th:action) -->
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="sidebar-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/>
+                    </svg>
+                    Log out
+                </button>
+            </form>
+
+            <!-- Replace the static name/role with your logged-in user data -->
+            <div class="user-card">
+                <div class="avatar">AM</div>
+                <div>
+                    <div class="user-name">Alex Morgan</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===================== Main content ===================== -->
+    <main class="main">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">Chore dashboard</p>
+                <h1 class="page-title">Welcome back, Alex.</h1>
+                <p class="page-subtitle">Here’s what’s happening with your choir.</p>
+            </div>
+
+            <a class="btn-primary" th:href="@{/concerts/new}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                New concert
+            </a>
+        </header>
+
+        <section>
+            <div class="section-heading">
+                <h2 class="section-title">All concerts</h2>
+                <span class="count-pill" th:text="${#lists.size(concerts)} + ' concerts'">3 concerts</span>
+            </div>
+
+            <div class="concert-grid" th:if="${not #lists.isEmpty(concerts)}">
+                <article class="concert-card" th:each="c : ${concerts}">
+
+                    <!-- Cover image area.
+                         To show a real photo, add an image URL field to your Concert entity
+                         and set it here, e.g.:
+                         th:style="|background-image:url('${c.imageUrl}')|" -->
+                    <div class="card-media">
+                        <span class="status-badge upcoming"
+                              th:if="${c.startDateTime.isAfter(#temporals.createNow())}">Upcoming</span>
+                        <span class="status-badge past"
+                              th:unless="${c.startDateTime.isAfter(#temporals.createNow())}">Past</span>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="date-badge">
+                            <span class="date-day" th:text="${#temporals.format(c.startDateTime, 'dd')}">18</span>
+                            <span class="date-month" th:text="${#temporals.format(c.startDateTime, 'MMM')}">Sep</span>
+                        </div>
+
+                        <div class="concert-info">
+                            <h3 class="concert-name" th:text="${c.name}">Concert name</h3>
+
+                            <div class="meta-line">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                                </svg>
+                                <span th:text="${#temporals.format(c.startDateTime, 'HH:mm')}">19:30</span>
+                            </div>
+
+                            <div class="meta-line">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <span th:text="${c.venue}">Venue</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <!-- Assumes the Concert has an "id" property and these routes exist -->
+                        <a class="link-members" th:href="@{/concerts/{id}/members(id=${c.id})}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            View members
+                        </a>
+
+                        <div class="card-actions">
+                            <a class="icon-btn" th:href="@{/concerts/{id}/edit(id=${c.id})}" aria-label="Edit concert" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                                </svg>
+                            </a>
+
+                            <form th:action="@{/concerts/{id}/delete(id=${c.id})}" method="post"
+                                  onsubmit="return confirm('Delete this concert?');">
+                                <button type="submit" class="icon-btn danger" aria-label="Delete concert" title="Delete">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6M14 11v6"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- The designed empty state, not an accidentally blank page. -->
+            <div class="empty-state" th:if="${#lists.isEmpty(concerts)}">
+                <p th:text="#{concert.empty}">No concerts yet.</p>
+                <a class="btn-primary" th:href="@{/concerts/new}">New concert</a>
+            </div>
+        </section>
+    </main>
+</div>
 </body>
 </html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="hr">
+<body>
+<h1>New concert</h1>
+<form method="post" th:action="@{/concerts/new}" th:object="${concertForm}">
+    <div class="field">
+        <label for="title">Title</label>
+        <input type="text" id="title" th:field="*{name}">
+    </div>
+    <div class="field">
+        <label for="venue">Venue</label>
+        <input type="text" id="venue" th:field="*{venue}">
+    </div>
+    <div class="field">
+        <label for="startsAt">Starts at</label>
+        <input type="datetime-local" id="startsAt" th:field="*{startDateTime}">
+    </div>
+
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>

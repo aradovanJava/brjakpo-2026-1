@@ -17,4 +17,9 @@ public class ConcertServiceImpl implements ConcertService {
     public List<Concert> getConcerts() {
         return concertRepo.findAll();
     }
+
+    @Override
+    public void addConcert(Concert concert) {
+        concertRepo.save(concert);
+    }
 }

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ConcertService {
     List<Concert> getConcerts();
+    void addConcert(Concert concert);
 }

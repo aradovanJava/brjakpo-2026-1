@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Concert {
+    private Long id;
     private String name;
     private LocalDateTime startDateTime;
     private String venue;
