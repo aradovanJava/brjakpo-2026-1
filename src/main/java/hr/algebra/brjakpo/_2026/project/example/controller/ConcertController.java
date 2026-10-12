@@ -6,10 +6,9 @@ import hr.algebra.brjakpo._2026.project.example.service.ConcertService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("concerts")
@@ -34,6 +33,15 @@ public class ConcertController {
     public String newConcert(@ModelAttribute("concertForm") ConcertForm concertForm) {
         Concert newConcert = convertConcertFormToConcert(concertForm);
         concertService.addConcert(newConcert);
+        return "redirect:/concerts/list";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteConcert(@PathVariable("id") Long id) {
+        Optional<Concert> concertToBeDeleted = concertService.getConcertById(id);
+        if(concertToBeDeleted.isPresent()) {
+            concertService.deleteConcert(concertToBeDeleted.get());
+        }
         return "redirect:/concerts/list";
     }
 

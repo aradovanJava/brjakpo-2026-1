@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MockConcertRepository implements ConcertRepository {
@@ -37,9 +38,24 @@ public class MockConcertRepository implements ConcertRepository {
     }
 
     @Override
+    public Optional<Concert> findById(Long id) {
+        for (Concert concert : concerts) {
+            if (concert.getId() == id) {
+                return Optional.of(concert);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public void save(Concert concert) {
         concert.setId(generateTheNextId());
         concerts.add(concert);
+    }
+
+    @Override
+    public void delete(Concert concert) {
+        concerts.remove(concert);
     }
 
     private Long generateTheNextId() {

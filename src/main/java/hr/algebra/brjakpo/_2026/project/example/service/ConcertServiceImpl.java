@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,7 +20,17 @@ public class ConcertServiceImpl implements ConcertService {
     }
 
     @Override
+    public Optional<Concert> getConcertById(Long id) {
+        return concertRepo.findById(id);
+    }
+
+    @Override
     public void addConcert(Concert concert) {
         concertRepo.save(concert);
+    }
+
+    @Override
+    public void deleteConcert(Concert concert) {
+        concertRepo.delete(concert);
     }
 }

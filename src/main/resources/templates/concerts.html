@@ -152,7 +152,7 @@
                                 </svg>
                             </a>
 
-                            <form th:action="@{/concerts/{id}/delete(id=${c.id})}" method="post"
+                            <form th:action="@{/concerts/delete/{id}(id=${c.id})}" method="post"
                                   onsubmit="return confirm('Delete this concert?');">
                                 <button type="submit" class="icon-btn danger" aria-label="Delete concert" title="Delete">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
