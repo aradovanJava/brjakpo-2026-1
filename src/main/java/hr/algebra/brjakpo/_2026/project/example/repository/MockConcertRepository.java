@@ -49,8 +49,17 @@ public class MockConcertRepository implements ConcertRepository {
 
     @Override
     public void save(Concert concert) {
-        concert.setId(generateTheNextId());
-        concerts.add(concert);
+
+        if(Optional.ofNullable(concert.getId()).isPresent()) {
+            Concert concertToUpdate = findById(concert.getId()).get();
+            concertToUpdate.setName(concert.getName());
+            concertToUpdate.setVenue(concert.getVenue());
+            concertToUpdate.setStartDateTime(concert.getStartDateTime());
+        }
+        else {
+            concert.setId(generateTheNextId());
+            concerts.add(concert);
+        }
     }
 
     @Override

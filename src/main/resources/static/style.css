@@ -602,3 +602,198 @@ svg {
         transition: none !important;
     }
 }
+
+/* ==========================================================================
+   "Create a concert" form
+   ========================================================================== */
+
+.form-shell {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    padding: 32px 16px;
+}
+
+.form-panel {
+    width: 100%;
+    max-width: 660px;
+    overflow: hidden;
+    background: #fbf8f6;
+    border: 1px solid var(--c-border);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(58, 29, 78, 0.08);
+}
+
+.form-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 24px 24px 22px;
+    border-bottom: 1px solid var(--c-border);
+}
+
+.form-header .eyebrow {
+    margin-bottom: 14px;
+}
+
+.form-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+}
+
+.close-btn {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin-top: 6px;
+    border-radius: 8px;
+    color: var(--c-muted);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.close-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+.close-btn:hover {
+    background: #f1ebe8;
+    color: var(--c-ink);
+}
+
+.form-body {
+    padding: 28px 24px 24px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+/* A row with a single field (e.g. only "Venue") uses the full width */
+.form-row > .field:only-child {
+    grid-column: 1 / -1;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    margin-bottom: 24px;
+}
+
+.form-row > .field {
+    margin-bottom: 0;
+}
+
+.field label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #4d4150;
+}
+
+.field input[type="text"],
+.field input[type="date"],
+.field input[type="datetime"],
+.field input[type="time"],
+.field input[type="datetime-local"],
+.field select {
+    width: 100%;
+    height: 56px;
+    padding: 0 18px;
+    border: 1px solid #e3d9d4;
+    border-radius: 12px;
+    background: #fff;
+    font: inherit;
+    font-size: 15px;
+    color: var(--c-ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field input:hover,
+.field select:hover {
+    border-color: #d3c6c0;
+}
+
+.field input:focus,
+.field select:focus {
+    outline: none;
+    border-color: var(--c-accent);
+    box-shadow: 0 0 0 3px rgba(232, 96, 76, 0.16);
+}
+
+.field select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 48px;
+    font-weight: 700;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232a1c2e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+.field-error {
+    margin: 0;
+    font-size: 13px;
+    color: var(--c-accent-dark);
+}
+
+.field input.has-error {
+    border-color: var(--c-accent);
+}
+
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 4px;
+    padding-top: 24px;
+    border-top: 1px solid var(--c-border);
+}
+
+.form-footer .btn-primary {
+    margin-top: 0;
+    padding: 18px 24px;
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 18px 20px;
+    border: 1px solid #e3d9d4;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    color: #4d4150;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.btn-secondary:hover {
+    border-color: #cdbfb8;
+    background: #fdfbfa;
+}
+
+@media (max-width: 560px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .form-footer {
+        flex-direction: column-reverse;
+    }
+
+    .form-footer .btn-primary,
+    .btn-secondary {
+        justify-content: center;
+    }
+}

@@ -135,8 +135,13 @@
                         </div>
                     </div>
 
+
                     <div class="card-footer">
-                        <!-- Assumes the Concert has an "id" property and these routes exist -->
+
+                        <!--
+
+                        <-- TODO: We still don't use links to members
+
                         <a class="link-members" th:href="@{/concerts/{id}/members(id=${c.id})}">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
@@ -145,8 +150,10 @@
                             View members
                         </a>
 
+                        -->
+
                         <div class="card-actions">
-                            <a class="icon-btn" th:href="@{/concerts/{id}/edit(id=${c.id})}" aria-label="Edit concert" title="Edit">
+                            <a class="icon-btn" th:href="@{/concerts/update/{id}(id=${c.id})}" aria-label="Edit concert" title="Edit">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>
                                 </svg>
@@ -163,6 +170,7 @@
                             </form>
                         </div>
                     </div>
+
                 </article>
             </div>
 

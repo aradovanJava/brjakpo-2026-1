@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create a concert</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="form-shell">
+    <div class="form-panel">
+
+        <header class="form-header">
+            <div>
+                <p class="eyebrow">Chore</p>
+                <h1 class="form-title">Create a concert</h1>
+            </div>
+            <a class="close-btn" th:href="@{/concerts}" aria-label="Close" title="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6 6 18"/>
+                </svg>
+            </a>
+        </header>
+
+        <form class="form-body" method="post" th:action="@{/concerts/new}" th:object="${concertForm}">
+
+            <input type="hidden" id="concertId" th:field="*{id}">
+
+            <div class="field">
+                <label for="title">Concert name</label>
+                <input type="text" id="title" th:field="*{name}"
+                       th:classappend="${#fields.hasErrors('name')} ? 'has-error'">
+                <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</p>
+            </div>
+
+            <!-- Date + Time are shown separately, but the form still submits
+                 the single "startDateTime" field. A small script (bottom of page)
+                 combines them into the hidden input. -->
+            <div class="form-row">
+                <!--
+                <div class="field">
+                    <label for="startDate">Date</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="field">
+                    <label for="startTime">Time</label>
+                    <input type="time" id="startTime" value="19:30" required>
+                </div>
+                -->
+                <div class="field">
+                    <label for="startDateTime">Date</label>
+                    <input type="datetime-local" id="startDateTime" th:field="*{startDateTime}" required>
+                </div>
+            </div>
+            <!--
+            <input type="hidden" id="startsAt" th:field="*{startDateTime}">
+            <p class="field-error" th:if="${#fields.hasErrors('startDateTime')}" th:errors="*{startDateTime}">Error</p>
+            -->
+            <div class="form-row">
+                <div class="field">
+                    <label for="venue">Venue</label>
+                    <input type="text" id="venue" th:field="*{venue}"
+                           th:classappend="${#fields.hasErrors('venue')} ? 'has-error'">
+                    <p class="field-error" th:if="${#fields.hasErrors('venue')}" th:errors="*{venue}">Error</p>
+                </div>
+
+                <!-- OPTIONAL: uncomment once ConcertForm has a "city" property.
+                     Venue and City will then sit side by side.
+                <div class="field">
+                    <label for="city">City</label>
+                    <input type="text" id="city" th:field="*{city}">
+                </div>
+                -->
+            </div>
+
+            <!-- OPTIONAL: uncomment once ConcertForm has a "status" property
+                 (adjust the option values to match your enum).
+            <div class="field">
+                <label for="status">Status</label>
+                <select id="status" th:field="*{status}">
+                    <option value="UPCOMING">Upcoming</option>
+                    <option value="DRAFT">Draft</option>
+                </select>
+            </div>
+            -->
+
+            <div class="form-footer">
+                <a class="btn-secondary" th:href="@{/concerts}">Cancel</a>
+                <button type="submit" class="btn-primary">Save concert</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var date = document.getElementById('startDate');
+        var time = document.getElementById('startTime');
+        var hidden = document.getElementById('startsAt');
+
+        // Re-fill the visible inputs if the form is shown again with a value (e.g. after a validation error)
+        if (hidden.value) {
+            var parts = hidden.value.split('T');
+            date.value = parts[0];
+            time.value = (parts[1] || '').slice(0, 5) || time.value;
+        }
+
+        function sync() {
+            hidden.value = date.value ? date.value + 'T' + (time.value || '00:00') : '';
+        }
+
+        date.addEventListener('input', sync);
+        time.addEventListener('input', sync);
+        sync();
+    })();
+</script>
+</body>
+</html>

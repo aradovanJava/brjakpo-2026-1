@@ -26,31 +26,34 @@ public class ConcertController {
     @GetMapping("/new")
     public String getNewConcert(Model model) {
         model.addAttribute("concertForm", new ConcertForm());
-        return "newConcert";
+        return "saveConcert";
+    }
+
+    @GetMapping("/update/{id}")
+    public String getUpdateConcert(Model model, @PathVariable Long id) {
+        Optional<ConcertForm> concertFromOptional = concertService.getConcertById(id);
+
+        if(concertFromOptional.isPresent()) {
+            ConcertForm concertForm = concertFromOptional.get();
+            model.addAttribute("concertForm", concertForm);
+            return "saveConcert";
+        }
+        else {
+            //TODO add an error message that explains that the concert with the given ID does not exist
+            return "redirect:/concerts/list";
+        }
     }
 
     @PostMapping("/new")
     public String newConcert(@ModelAttribute("concertForm") ConcertForm concertForm) {
-        Concert newConcert = convertConcertFormToConcert(concertForm);
-        concertService.addConcert(newConcert);
+        concertService.addConcert(concertForm);
         return "redirect:/concerts/list";
     }
 
     @PostMapping("/delete/{id}")
     public String deleteConcert(@PathVariable("id") Long id) {
-        Optional<Concert> concertToBeDeleted = concertService.getConcertById(id);
-        if(concertToBeDeleted.isPresent()) {
-            concertService.deleteConcert(concertToBeDeleted.get());
-        }
+        concertService.deleteConcert(id);
+        //TODO check if the concert with the given ID exists
         return "redirect:/concerts/list";
     }
-
-    private Concert convertConcertFormToConcert(ConcertForm form) {
-        Concert newConcert = new Concert();
-        newConcert.setName(form.getName());
-        newConcert.setVenue(form.getVenue());
-        newConcert.setStartDateTime(form.getStartDateTime());
-        return newConcert;
-    }
-
 }
