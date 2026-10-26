@@ -38,6 +38,13 @@ public class MockConcertRepository implements ConcertRepository {
     }
 
     @Override
+    public List<Concert> findByExample(Concert concertFilterCriteria) {
+        return concerts.stream()
+                .filter(c -> c.getName().contains(concertFilterCriteria.getName()))
+                .toList();
+    }
+
+    @Override
     public Optional<Concert> findById(Long id) {
         for (Concert concert : concerts) {
             if (concert.getId() == id) {

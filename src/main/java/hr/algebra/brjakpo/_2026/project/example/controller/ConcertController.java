@@ -3,11 +3,15 @@ package hr.algebra.brjakpo._2026.project.example.controller;
 import hr.algebra.brjakpo._2026.project.example.model.Concert;
 import hr.algebra.brjakpo._2026.project.example.model.ConcertForm;
 import hr.algebra.brjakpo._2026.project.example.service.ConcertService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -45,15 +49,48 @@ public class ConcertController {
     }
 
     @PostMapping("/new")
-    public String newConcert(@ModelAttribute("concertForm") ConcertForm concertForm) {
+    public String newConcert(@Valid @ModelAttribute("concertForm") ConcertForm concertForm,
+                             BindingResult result,
+                             RedirectAttributes redirect) {
+
+        if(result.hasErrors()) {
+            return "saveConcert";
+        }
+
         concertService.addConcert(concertForm);
+        if(Optional.ofNullable(concertForm.getId()).isPresent()) {
+            redirect.addFlashAttribute("toast", "Updated " + concertForm.getName() + " concert!");
+        }
+        else {
+            redirect.addFlashAttribute("toast", "Added " + concertForm.getName() + " concert!");
+        }
+
         return "redirect:/concerts/list";
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteConcert(@PathVariable("id") Long id) {
-        concertService.deleteConcert(id);
-        //TODO check if the concert with the given ID exists
+    public String deleteConcert(@PathVariable("id") Long id,
+                                RedirectAttributes redirect) {
+        Optional<ConcertForm> concertFormOptional = concertService.getConcertById(id);
+
+        if(Optional.ofNullable(concertFormOptional).isPresent()) {
+            concertService.deleteConcert(id);
+            redirect.addFlashAttribute("toast", "Concert " + concertFormOptional.get().getName() + " successfully deleted!");
+        }
+        else {
+            redirect.addFlashAttribute("toast", "Concert " + id + " not found!");
+        }
+
         return "redirect:/concerts/list";
+    }
+
+    @GetMapping("/filter")
+    public String list(@RequestParam(required = false) String concertName,
+                       Model model) {
+        ConcertForm concertFormFilterCriteria = new ConcertForm();
+        concertFormFilterCriteria.setName(concertName);
+        List<ConcertForm> filterdConcertFormList = concertService.filterConcerts(concertFormFilterCriteria);
+        model.addAttribute("concerts", filterdConcertFormList);
+        return "concerts";
     }
 }

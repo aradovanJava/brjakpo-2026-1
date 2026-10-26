@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface ConcertService {
     List<ConcertForm> getConcerts();
+    List<ConcertForm> filterConcerts(ConcertForm concertFormFilterCriteria);
     Optional<ConcertForm> getConcertById(Long id);
     void addConcert(ConcertForm concert);
     void deleteConcert(Long concertId);

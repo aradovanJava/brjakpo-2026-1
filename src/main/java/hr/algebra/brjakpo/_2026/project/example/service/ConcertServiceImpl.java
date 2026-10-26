@@ -23,6 +23,13 @@ public class ConcertServiceImpl implements ConcertService {
     }
 
     @Override
+    public List<ConcertForm> filterConcerts(ConcertForm concertFormFilterCriteria) {
+        return concertRepo.findByExample(convertConcertFormToConcert(concertFormFilterCriteria))
+                .stream()
+                .map(concert -> convertConcertToConcertForm(concert)).toList();
+    }
+
+    @Override
     public Optional<ConcertForm> getConcertById(Long id) {
         return concertRepo.findById(id).map(c -> convertConcertToConcertForm(c));
     }

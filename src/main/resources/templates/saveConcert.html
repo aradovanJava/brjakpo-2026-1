@@ -33,29 +33,13 @@
                 <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</p>
             </div>
 
-            <!-- Date + Time are shown separately, but the form still submits
-                 the single "startDateTime" field. A small script (bottom of page)
-                 combines them into the hidden input. -->
             <div class="form-row">
-                <!--
-                <div class="field">
-                    <label for="startDate">Date</label>
-                    <input type="date" id="startDate" required>
-                </div>
-                <div class="field">
-                    <label for="startTime">Time</label>
-                    <input type="time" id="startTime" value="19:30" required>
-                </div>
-                -->
                 <div class="field">
                     <label for="startDateTime">Date</label>
                     <input type="datetime-local" id="startDateTime" th:field="*{startDateTime}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('startDateTime')}" th:errors="*{startDateTime}">Error</p>
                 </div>
             </div>
-            <!--
-            <input type="hidden" id="startsAt" th:field="*{startDateTime}">
-            <p class="field-error" th:if="${#fields.hasErrors('startDateTime')}" th:errors="*{startDateTime}">Error</p>
-            -->
             <div class="form-row">
                 <div class="field">
                     <label for="venue">Venue</label>
@@ -63,27 +47,7 @@
                            th:classappend="${#fields.hasErrors('venue')} ? 'has-error'">
                     <p class="field-error" th:if="${#fields.hasErrors('venue')}" th:errors="*{venue}">Error</p>
                 </div>
-
-                <!-- OPTIONAL: uncomment once ConcertForm has a "city" property.
-                     Venue and City will then sit side by side.
-                <div class="field">
-                    <label for="city">City</label>
-                    <input type="text" id="city" th:field="*{city}">
-                </div>
-                -->
             </div>
-
-            <!-- OPTIONAL: uncomment once ConcertForm has a "status" property
-                 (adjust the option values to match your enum).
-            <div class="field">
-                <label for="status">Status</label>
-                <select id="status" th:field="*{status}">
-                    <option value="UPCOMING">Upcoming</option>
-                    <option value="DRAFT">Draft</option>
-                </select>
-            </div>
-            -->
-
             <div class="form-footer">
                 <a class="btn-secondary" th:href="@{/concerts}">Cancel</a>
                 <button type="submit" class="btn-primary">Save concert</button>

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface ConcertRepository {
     List<Concert> findAll();
+    List<Concert> findByExample(Concert concertFilterCriteria);
     Optional<Concert> findById(Long id);
     void save(Concert concert);
     void delete(Concert concert);
