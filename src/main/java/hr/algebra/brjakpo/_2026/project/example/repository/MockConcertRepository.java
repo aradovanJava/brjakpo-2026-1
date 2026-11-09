@@ -75,8 +75,14 @@ public class MockConcertRepository implements ConcertRepository {
     }
 
     @Override
-    public void update(Concert concert, Long concertId) {
-
+    public void update(Concert concertForUpdate, Long concertId) {
+        Optional<Concert> concertOptional = concerts.stream().filter(c -> c.getId().equals(concertId)).findFirst();
+        if(concertOptional.isPresent()) {
+            Concert concertToUpdate = concertOptional.get();
+            concertToUpdate.setName(concertForUpdate.getName());
+            concertToUpdate.setVenue(concertForUpdate.getVenue());
+            concertToUpdate.setStartDateTime(concertForUpdate.getStartDateTime());
+        }
     }
 
     private Long generateTheNextId() {
