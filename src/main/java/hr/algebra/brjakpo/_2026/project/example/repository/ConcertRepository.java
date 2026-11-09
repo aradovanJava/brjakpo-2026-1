@@ -11,4 +11,5 @@ public interface ConcertRepository {
     Optional<Concert> findById(Long id);
     void save(Concert concert);
     void delete(Concert concert);
+    void update(Concert concert, Long concertId);
 }

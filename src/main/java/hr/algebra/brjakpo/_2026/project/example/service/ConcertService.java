@@ -11,4 +11,5 @@ public interface ConcertService {
     Optional<ConcertForm> getConcertById(Long id);
     void addConcert(ConcertForm concert);
     void deleteConcert(Long concertId);
+    void updateConcert(ConcertForm concertFormForUpdate, Long concertId);
 }

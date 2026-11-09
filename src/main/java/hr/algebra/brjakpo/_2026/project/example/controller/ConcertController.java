@@ -57,12 +57,13 @@ public class ConcertController {
             return "saveConcert";
         }
 
-        concertService.addConcert(concertForm);
         if(Optional.ofNullable(concertForm.getId()).isPresent()) {
+
             redirect.addFlashAttribute("toast", "Updated " + concertForm.getName() + " concert!");
         }
         else {
-            redirect.addFlashAttribute("toast", "Added " + concertForm.getName() + " concert!");
+            concertService.addConcert(concertForm);
+            redirect.addFlashAttribute("toast", "Updated " + concertForm.getName() + " concert!");
         }
 
         return "redirect:/concerts/list";

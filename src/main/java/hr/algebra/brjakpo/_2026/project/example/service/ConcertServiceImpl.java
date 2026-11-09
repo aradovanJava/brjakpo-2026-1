@@ -47,6 +47,11 @@ public class ConcertServiceImpl implements ConcertService {
         }
     }
 
+    @Override
+    public void updateConcert(ConcertForm concertFormForUpdate, Long concertId) {
+        //TODO call update Repository method
+    }
+
     private Concert convertConcertFormToConcert(ConcertForm form) {
         Concert newConcert = new Concert();
         newConcert.setId(form.getId());

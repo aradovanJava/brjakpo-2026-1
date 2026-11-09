@@ -74,6 +74,11 @@ public class MockConcertRepository implements ConcertRepository {
         concerts.remove(concert);
     }
 
+    @Override
+    public void update(Concert concert, Long concertId) {
+
+    }
+
     private Long generateTheNextId() {
         return concerts.stream().map(Concert::getId).max(Long::compareTo).orElse(0L) + 1;
     }

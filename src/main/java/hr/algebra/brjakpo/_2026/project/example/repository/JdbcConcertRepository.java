@@ -67,6 +67,11 @@ public class JdbcConcertRepository implements ConcertRepository{
         jdbcTemplate.update("DELETE FROM CONCERT WHERE ID = ?", concert.getId());
     }
 
+    @Override
+    public void update(Concert concert, Long concertId) {
+
+    }
+
     private class ConcertRowMapper implements RowMapper<Concert> {
         @Override
         public Concert mapRow(ResultSet rs, int rowNum) throws SQLException {
