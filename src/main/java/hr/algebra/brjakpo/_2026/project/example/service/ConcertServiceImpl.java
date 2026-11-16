@@ -2,8 +2,9 @@ package hr.algebra.brjakpo._2026.project.example.service;
 
 import hr.algebra.brjakpo._2026.project.example.model.Concert;
 import hr.algebra.brjakpo._2026.project.example.model.ConcertForm;
-import hr.algebra.brjakpo._2026.project.example.repository.ConcertRepository;
+import hr.algebra.brjakpo._2026.project.example.repository.SpringDataJpaConcertRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ConcertServiceImpl implements ConcertService {
 
-    private ConcertRepository concertRepo;
+    private SpringDataJpaConcertRepository concertRepo;
 
     @Override
     public List<ConcertForm> getConcerts() {
@@ -24,7 +25,8 @@ public class ConcertServiceImpl implements ConcertService {
 
     @Override
     public List<ConcertForm> filterConcerts(ConcertForm concertFormFilterCriteria) {
-        return concertRepo.findByExample(convertConcertFormToConcert(concertFormFilterCriteria))
+        Example<Concert> concertExample = Example.of(convertConcertFormToConcert(concertFormFilterCriteria));
+        return concertRepo.findAll(concertExample)
                 .stream()
                 .map(concert -> convertConcertToConcertForm(concert)).toList();
     }
@@ -49,7 +51,15 @@ public class ConcertServiceImpl implements ConcertService {
 
     @Override
     public void updateConcert(ConcertForm concertFormForUpdate, Long concertId) {
-        //TODO call update Repository method
+        Optional<Concert> concertToUpdate = concertRepo.findById(concertId);
+
+        if(concertToUpdate.isPresent()) {
+            Concert concert = concertToUpdate.get();
+            concert.setName(concertFormForUpdate.getName());
+            concert.setVenue(concertFormForUpdate.getVenue());
+            concert.setStartDateTime(concertFormForUpdate.getStartDateTime());
+            concertRepo.save(concert);
+        }
     }
 
     private Concert convertConcertFormToConcert(ConcertForm form) {
